@@ -35,7 +35,20 @@
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <title>Pei-Iun Hsieh</title>
-<script>document.documentElement.classList.add('js');</script>
+<script>
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('js');
+    var dark = false;
+    try {
+      var saved = localStorage.getItem('theme');
+      dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (e) {}
+    d.setAttribute('data-theme', dark ? 'dark' : 'light');
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', dark ? '#1a1215' : '#E0658A');
+  })();
+</script>
 <meta name="description" content="Pei-Iun Hsieh (謝佩芸) — post-baccalaureate medical student and researcher in geriatric epidemiology, sarcopenia, cognitive aging, and preventive medicine.">
 <!-- Favicons & app icons (PWA icons declared in manifest.webmanifest) -->
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -47,6 +60,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Hanken+Grotesk:wght@300..800&display=swap" rel="stylesheet">
 <style>
 :root {
+  color-scheme: light;
   --bg: #fff8f4;
   --surface: #ffffff;
   --surface-blush: #fce9ed;
@@ -62,6 +76,86 @@
   --maxw: 1120px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
+
+/* ===================================================================
+   DARK THEME
+   Enabled by [data-theme="dark"] on <html> — set before first paint by
+   the inline script in <head>, toggled via the .theme-toggle button, and
+   remembered in localStorage. Tokens are remapped below; the few filled,
+   white-text elements (badge, primary button, contact card, mobile email)
+   are overridden so they stay saturated and legible on a dark surface.
+   =================================================================== */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1a1215;
+  --surface: #251c20;
+  --surface-blush: #2c2025;
+  --ink: #f3e9ec;
+  --ink-soft: #ccb4bc;
+  --muted: #a98f98;
+  --rose: #ec7f9e;
+  --rose-deep: #f295b0;
+  --rose-bright: #f6a8bd;
+  --blush: #4a2f38;
+  --line: #322329;
+  --shadow-rose: rgba(0, 0, 0, 0.5);
+}
+[data-theme="dark"] body::before {
+  background:
+    radial-gradient(900px 600px at 85% -5%, rgba(224, 101, 138, 0.14), transparent 60%),
+    radial-gradient(800px 700px at -10% 25%, rgba(190, 63, 104, 0.1), transparent 55%),
+    radial-gradient(700px 600px at 50% 110%, rgba(150, 60, 95, 0.16), transparent 60%),
+    var(--bg);
+}
+[data-theme="dark"] body::after {
+  mix-blend-mode: screen;
+  opacity: 0.05;
+}
+[data-theme="dark"] header.nav.scrolled {
+  background: rgba(26, 18, 21, 0.82);
+}
+[data-theme="dark"] header.nav.menu-open {
+  background: rgba(26, 18, 21, 0.95);
+}
+[data-theme="dark"] nav.links {
+  background: rgba(26, 18, 21, 0.98);
+}
+[data-theme="dark"] .brand .mono {
+  background: linear-gradient(135deg, #e0658a, #be3f68);
+}
+[data-theme="dark"] .btn-primary {
+  background: #be3f68;
+}
+[data-theme="dark"] .btn-primary:hover {
+  box-shadow: 0 20px 34px -14px rgba(0, 0, 0, 0.55);
+}
+[data-theme="dark"] .portrait {
+  border-color: #34262c;
+  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6);
+}
+[data-theme="dark"] .portrait-blob {
+  background: linear-gradient(150deg, #e0658a, #be3f68 60%, #3a2230);
+  opacity: 0.4;
+}
+[data-theme="dark"] .tl-item::before {
+  background: var(--bg);
+}
+[data-theme="dark"] .tag:hover {
+  background: #c64b76;
+  color: #fff;
+}
+[data-theme="dark"] .type-oral {
+  background: rgba(214, 160, 108, 0.16);
+  color: #e3b083;
+}
+[data-theme="dark"] .contact-card {
+  background: linear-gradient(135deg, #9c2f54, #be3f68);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.6);
+}
+[data-theme="dark"] nav.links .menu-email {
+  background: #be3f68;
+}
+
 
 * {
   margin: 0;
@@ -257,6 +351,58 @@ header.nav.menu-open {
   box-shadow:
     0 1px 0 var(--line),
     0 10px 30px -22px var(--shadow-rose);
+}
+
+/* ---------- THEME TOGGLE ---------- */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  transition:
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+.theme-toggle:hover {
+  color: var(--rose-deep);
+  border-color: var(--blush);
+  transform: translateY(-1px);
+}
+.theme-toggle svg {
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.45s var(--ease);
+}
+.theme-toggle .moon {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+.theme-toggle .sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+[data-theme="dark"] .theme-toggle .moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+[data-theme="dark"] .theme-toggle .sun {
+  opacity: 1;
+  transform: rotate(0) scale(1);
 }
 
 /* ---------- HERO ---------- */
@@ -1156,7 +1302,8 @@ footer.foot {
       <span class="mono" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 37.5C24 37.5 8.5 28.2 8.5 18.4C8.5 12.8 12.6 9.3 16.9 9.3C19.8 9.3 22.5 11.1 24 13.7C25.5 11.1 28.2 9.3 31.1 9.3C35.4 9.3 39.5 12.8 39.5 18.4C39.5 28.2 24 37.5 24 37.5Z" fill="#fff"/><path d="M12.5 21.5H19L21.5 16.5L24.5 26L27 21.5H35.5" fill="none" stroke="#BE3F68" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       Pei-Iun Hsieh <span class="zh">謝佩芸</span>
     </a>
-    <nav class="links" id="nav-menu">
+    <div class="nav-right">
+      <nav class="links" id="nav-menu">
       <a href="#about">About</a>
       <a href="#education">Education</a>
       <a href="#experience">Experience</a>
@@ -1167,9 +1314,14 @@ footer.foot {
       <a href="#contact">Contact</a>
       <a href="mailto:s112086009@mail.nchu.edu.tw" class="menu-email">Email me</a>
     </nav>
-    <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-menu">
+          <button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+      <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-menu">
       <span></span><span></span><span></span>
     </button>
+      </div>
   </div>
 </header>
 
@@ -1787,6 +1939,40 @@ const spy = new IntersectionObserver(
   { rootMargin: '-45% 0px -50% 0px' },
 );
 sections.forEach((s) => spy.observe(s));
+</script>
+<script>
+  // Dark / light theme toggle
+  (function () {
+    var root = document.documentElement;
+    var btn = document.querySelector('.theme-toggle');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var COLORS = { light: '#E0658A', dark: '#1a1215' };
+    function mode() {
+      return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+    function sync(m) {
+      if (meta) meta.setAttribute('content', COLORS[m]);
+      if (btn) btn.setAttribute('aria-pressed', m === 'dark' ? 'true' : 'false');
+    }
+    sync(mode());
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var next = mode() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        sync(next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+    }
+    try {
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        if (!localStorage.getItem('theme')) {
+          var m = e.matches ? 'dark' : 'light';
+          root.setAttribute('data-theme', m);
+          sync(m);
+        }
+      });
+    } catch (e) {}
+  })();
 </script>
 </body>
 </html>
