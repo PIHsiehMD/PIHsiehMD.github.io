@@ -1,4 +1,31 @@
 <!DOCTYPE html>
+<!--
+  ============================================================================
+  Pei-Iun Hsieh (謝佩芸) — Curriculum Vitae · single-page website
+  ============================================================================
+  Self-contained static page. No build step and nothing to install; the only
+  external request is the Google Fonts stylesheet (<link> in <head>).
+
+  FILE LAYOUT
+    <head>    meta tags, Google Fonts, and ALL styles (one <style> block)
+    <body>    semantic <section> blocks, each labelled with an HTML comment
+    <script>  progressive-enhancement JS at the end of <body>
+
+  SECTIONS (in order)
+    Hero · About · Education · Experience · Publications ·
+    Awards · Credentials · Service · Contact (footer)
+
+  HOW TO EDIT
+    - Colours / theme : CSS custom properties in  :root  (top of <style>);
+                        this site's accent is rose.
+    - Profile photo   : the base64 data URI in the hero  .portrait img.
+    - Text content    : open the matching <section> (find it by its comment).
+    - Fonts           : the Google Fonts <link> plus the font-family tokens.
+
+  DEPLOY
+    Upload this file as  index.html  to any static host (e.g. GitHub Pages).
+  ============================================================================
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -104,9 +131,7 @@
 [data-theme="dark"] header.nav.menu-open {
   background: rgba(26, 18, 21, 0.95);
 }
-[data-theme="dark"] nav.links {
-  background: rgba(26, 18, 21, 0.98);
-}
+
 [data-theme="dark"] .brand .mono {
   background: linear-gradient(135deg, #e0658a, #be3f68);
 }
@@ -148,7 +173,6 @@
 [data-theme="dark"] nav.links .menu-email {
   background: #be3f68;
 }
-
 
 * {
   margin: 0;
@@ -1171,6 +1195,9 @@ footer.foot {
     border-radius: 999px;
     padding: 14px;
     border-bottom: none;
+  }
+  [data-theme="dark"] nav.links {
+    background: rgba(26, 18, 21, 0.98);
   }
 }
 @media (max-width: 760px) {
